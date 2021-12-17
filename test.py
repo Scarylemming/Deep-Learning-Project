@@ -18,9 +18,9 @@ def solve_EigenGame_R(X,V,i,tol,alpha) :
     t = 10
     for j in range(t) : 
         diff_v = diff(V,i,X)
-        diff_v_R = diff_v - np.dot(diff_v, V[:,i]) * V[:,i]
-        print(np.linalg.norm(diff_v_R,2))
-        v_i = V[:,i] + alpha * diff_v_R
+        #diff_v_R = diff_v - np.dot(diff_v, V[:,i]) * V[:,i]
+        #print(np.linalg.norm(diff_v_R,2))
+        v_i = V[:,i] + alpha * diff_v
         V[:,i] = v_i / np.linalg.norm(v_i,2)
     return V[:,i]
 
@@ -44,7 +44,7 @@ tol = 0.5
 def play_EigenGame(n,d,k) : 
     tol = 0.1
     alpha = 0.5
-    iter = 5
+    iter = 50
     #n is the number of points
     #d is the dimension of each point
     #k is the number of Principal Components to get
@@ -63,7 +63,7 @@ def play_EigenGame(n,d,k) :
     return V,M
 
 def find_Lambda(V,M) : 
-    return (V**(-1)).T @ M @ V
+    return V.T @ M @ V
 
 V,M = play_EigenGame(n,d,k)
 a = find_Lambda(V,M)

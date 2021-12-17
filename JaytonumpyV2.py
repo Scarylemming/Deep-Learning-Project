@@ -6,10 +6,6 @@ def calc_numpy_eig(X):
     p,q = np.linalg.eig(np.dot(np.transpose(X),X))
     return (p,q)
 
-# Define utlity function, we will take grad of this in the
-# update step, v is the current eigenvector being calculated
-# X is the design matrix and V1 holds the previously computed eigenvectors
-
 # Update rule to be used for calculating eigenvectors
 # For first eigenvector use riemannian_projection = False (update rule given in the paper doesn't work without the penalty term)
 # For all others, use riemannian_projection = True to be aligned with the paper
@@ -23,6 +19,15 @@ def diff(V,i,X) :
         #print(sum.shape)
     return 2 * X.T @ (X @ V[:,i] -  penalties)
 
+def normalize_data(X) : 
+    for i in range(len(X)) : 
+        X[i] -= np.mean(X[i])
+        X[i] /= np.linalg.norm(X[i],2)
+    return X
+
+def create_matrix(n,d) : 
+    return np.random.normal(size = [n,d])
+
 def update(i,X,V,lr=0.1):
     
     diff_v = diff(V,i,X)
@@ -34,12 +39,14 @@ def update(i,X,V,lr=0.1):
 
 # Run the update step iteratively across all eigenvectors
 def calc_eigengame_eigenvectors(X,n,iterations=100):
-    v = np.array([[1.0],[1.0],[1.0],[1.0]])
-    v = v/np.linalg.norm(v)
-    v0 = np.array([[1.0],[1.0],[1.0],[1.0]])
-    v0 = v0/np.linalg.norm(v0)
-    V1 = np.zeros_like(X)
-    V1[:,0] = v.T
+    d = len(X[0])
+    v = np.ones(d, dtype = float)
+    v = v/np.linalg.norm(v,2)
+    v0 = np.ones(d, dtype = float)
+    v0 = v0/np.linalg.norm(v0,2)
+    print(X)
+    V1 = np.zeros([d,n])
+    V1[:,0] = v
 
     for k in range(n):
         print ("Finding the eigenvector ",k)
@@ -49,7 +56,7 @@ def calc_eigengame_eigenvectors(X,n,iterations=100):
             else:
                 #v = update(v,X,V1,riemannian_projection=True)
                 v = update(k,X,V1)
-        V1[:,k] = v
+        V1[:,k] = v.T
         v = v0
         if k<n-1:
             V1[:,k+1] = v0.T
@@ -65,22 +72,17 @@ def calc_eigengame_eigenvalues(X,V1):
     return eigvals
 
 # Matrix X for which we want to find the PCA
-X = np.array([[7.,4.,5.,2.],
-            [2.,19.,6.,13.],
-            [34.,23.,67.,23.],
-            [1.,7.,8.,4.]])
+# X = np.array([[7.,4.,5.,2.],
+#             [2.,19.,6.,13.],
+#             [34.,23.,67.,23.],
+#             [1.,7.,8.,4.]])
 
-# X = np.array([[9.,0.,0.,0.],
-#             [0.,8.,0.,0.],
-#             [0.,0.,7.,0.],
-#             [0.,0.,0.,1.]])
-
-# Centre the data
-# X = X-np.mean(X,axis=0)
-# print(X)
+n = 10 
+d = 5
+X = create_matrix(n,d)
 
 p,q = calc_numpy_eig(X)
-V1 = calc_eigengame_eigenvectors(X,4, iterations = 100)
+V1 = calc_eigengame_eigenvectors(X,d, iterations = 5000)
 print("\n Eigenvalues calculated using numpy are :\n",p)
 print("\n Eigenvectors calculated using numpy are :\n",q)
 print("\n Eigenvalues calculate using the Eigengame are :\n",calc_eigengame_eigenvalues(X,V1))
