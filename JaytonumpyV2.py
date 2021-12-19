@@ -1,5 +1,6 @@
 # Importing necessary libraries
 import numpy as np
+import copy
 
 # Calculate the eigenvalues of covariance matrix of X using Numpy for comparison
 def calc_numpy_eig(X):
@@ -71,6 +72,24 @@ def calc_eigengame_eigenvalues(X,V1):
         eigvals[:,k] = np.dot(V1[:,k],np.dot(M,V1[:,k].reshape(-1,1)))
     return eigvals
 
+def order_np_eigvectors(p, q) : #Just a simple reordering, works perfect with small dimensions, could be optimizes for higher ones
+    d = len(p)
+    indexes = np.zeros(d, dtype = int)
+    sort_p = np.sort(p)[::-1]
+    print(p, sort_p)
+    for i in range(d) : 
+        #print(p, sort_p[i])
+        indexes[i] = np.where(p == sort_p[i])[0]
+    res = np.zeros_like(q)
+    for i in range(d) : 
+        res[:,i] = q[:,indexes[i]]
+    return res
+        
+    
+    
+    
+    
+    pass
 # Matrix X for which we want to find the PCA
 # X = np.array([[7.,4.,5.,2.],
 #             [2.,19.,6.,13.],
@@ -82,9 +101,10 @@ d = 5
 X = create_matrix(n,d)
 
 p,q = calc_numpy_eig(X)
+p = order_np_eigvectors(p, q)
 V1 = calc_eigengame_eigenvectors(X,d, iterations = 5000)
 print("\n Eigenvalues calculated using numpy are :\n",p)
 print("\n Eigenvectors calculated using numpy are :\n",q)
 print("\n Eigenvalues calculate using the Eigengame are :\n",calc_eigengame_eigenvalues(X,V1))
 print("\n Eigenvectors calculated using the Eigengame are :\n",V1)
-print("\n Squared error in estimation of eigenvectors as compared to numpy :\n",np.sum((np.abs(q)-np.abs(V1))**2,axis=0))
+print("\n Squared error in estimation of eigenvectors as compared to numpy :\n",np.sum((np.abs(p)-np.abs(V1))**2,axis=0))
