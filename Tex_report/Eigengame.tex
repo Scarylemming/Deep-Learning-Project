@@ -1,0 +1,39 @@
+\documentclass[12pt]{report}
+
+\input{C:/Users/juraj/Desktop/Juraj/Projets_Latex/Commands_latex/commands}
+
+%Y A LE \INCLUDEONLY ICI POUR AFFICHER QUELQUES CERTAINES QUESTIONS POUR PAS QUE ÇA COMPILE PENDANT 10 000 ANS !!!
+%\includeonly{liste/15, liste/14, liste/16}
+\def\documentname{Deep Learning Project on the paper "EigenGame : PCA as a Nash Equilibrium"}
+
+
+\begin{document}
+
+%\fontsize{12pt}{14pt}\selectfont
+
+\begin{titlepage}
+  \thispagestyle{titlestyle}
+    \newcommand{\HRule}{\rule{\linewidth}{0.2mm}} % Defines a new command for the horizontal lines, change thickness here
+
+    \center % Center everything on the page
+
+
+    \HRule \\[0.6cm]
+    { \huge \bfseries \documentname}\\[0.4cm] % Title of your  document
+    \HRule \\[1.5cm]
+    Juraj Rosinsky
+    \vfill % Fill the rest of the page with whitespace
+\end{titlepage}
+
+\thispagestyle{titlestyle}
+
+\newpage
+
+\setcounter{page}{2}
+
+\foreach \n in {1,...,1}{\include{liste/\n}}
+
+
+
+
+\end{document}

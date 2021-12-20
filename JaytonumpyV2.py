@@ -1,6 +1,5 @@
 # Importing necessary libraries
 import numpy as np
-import copy
 
 # Calculate the eigenvalues of covariance matrix of X using Numpy for comparison
 def calc_numpy_eig(X):
@@ -45,7 +44,7 @@ def calc_eigengame_eigenvectors(X,n,iterations=100):
     v = v/np.linalg.norm(v,2)
     v0 = np.ones(d, dtype = float)
     v0 = v0/np.linalg.norm(v0,2)
-    print(X)
+    #print(X)
     V1 = np.zeros([d,n])
     V1[:,0] = v
 
@@ -76,7 +75,7 @@ def order_np_eigvectors(p, q) : #Just a simple reordering, works perfect with sm
     d = len(p)
     indexes = np.zeros(d, dtype = int)
     sort_p = np.sort(p)[::-1]
-    print(p, sort_p)
+    #print(p, sort_p)
     for i in range(d) : 
         #print(p, sort_p[i])
         indexes[i] = np.where(p == sort_p[i])[0]
@@ -84,27 +83,22 @@ def order_np_eigvectors(p, q) : #Just a simple reordering, works perfect with sm
     for i in range(d) : 
         res[:,i] = q[:,indexes[i]]
     return res
-        
-    
-    
-    
-    
-    pass
 # Matrix X for which we want to find the PCA
 # X = np.array([[7.,4.,5.,2.],
 #             [2.,19.,6.,13.],
 #             [34.,23.,67.,23.],
 #             [1.,7.,8.,4.]])
 
-n = 10 
-d = 5
+n = 100
+d = 20
 X = create_matrix(n,d)
 
 p,q = calc_numpy_eig(X)
-p = order_np_eigvectors(p, q)
-V1 = calc_eigengame_eigenvectors(X,d, iterations = 5000)
-print("\n Eigenvalues calculated using numpy are :\n",p)
-print("\n Eigenvectors calculated using numpy are :\n",q)
-print("\n Eigenvalues calculate using the Eigengame are :\n",calc_eigengame_eigenvalues(X,V1))
-print("\n Eigenvectors calculated using the Eigengame are :\n",V1)
-print("\n Squared error in estimation of eigenvectors as compared to numpy :\n",np.sum((np.abs(p)-np.abs(V1))**2,axis=0))
+q = order_np_eigvectors(p, q)
+V1 = calc_eigengame_eigenvectors(X,d, iterations = 1000)
+#print("\n Eigenvalues calculated using numpy are :\n",p)
+#print("\n Eigenvectors calculated using numpy are :\n",q)
+#print("\n Eigenvalues calculate using the Eigengame are :\n",calc_eigengame_eigenvalues(X,V1))
+#print("\n Eigenvectors calculated using the Eigengame are :\n",V1)
+print("\n Squared error in estimation of eigenvectors as compared to numpy :\n",(np.sum((np.abs(q)-np.abs(V1))**2, axis=0)))
+print("\n Biggest squared error in estimation of eigenvectors as compared to numpy :\n",np.max(np.sum((np.abs(q)-np.abs(V1))**2, axis=0)))
