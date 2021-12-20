@@ -83,22 +83,34 @@ def order_np_eigvectors(p, q) : #Just a simple reordering, works perfect with sm
     for i in range(d) : 
         res[:,i] = q[:,indexes[i]]
     return res
+
+def Oja_algo(X, T, V, nu) : 
+    for t in range(T) : 
+        V = V + nu * X.T @ X @ V 
+        Q,R = np.linalg.qr(V)
+        S = np.sign(np.sign(np.sum(np.diag(R))) + 0.5)
+        V = Q * S
+    return V
 # Matrix X for which we want to find the PCA
 # X = np.array([[7.,4.,5.,2.],
 #             [2.,19.,6.,13.],
 #             [34.,23.,67.,23.],
 #             [1.,7.,8.,4.]])
 
-n = 100
+n = 1000
 d = 20
+iterations = 200
 X = create_matrix(n,d)
 
+Oja = Oja_algo(X, iterations, create_matrix(d,d), 0.1)
 p,q = calc_numpy_eig(X)
 q = order_np_eigvectors(p, q)
-V1 = calc_eigengame_eigenvectors(X,d, iterations = 1000)
+EigenGame = calc_eigengame_eigenvectors(X,d, iterations)
 #print("\n Eigenvalues calculated using numpy are :\n",p)
 #print("\n Eigenvectors calculated using numpy are :\n",q)
 #print("\n Eigenvalues calculate using the Eigengame are :\n",calc_eigengame_eigenvalues(X,V1))
 #print("\n Eigenvectors calculated using the Eigengame are :\n",V1)
-print("\n Squared error in estimation of eigenvectors as compared to numpy :\n",(np.sum((np.abs(q)-np.abs(V1))**2, axis=0)))
-print("\n Biggest squared error in estimation of eigenvectors as compared to numpy :\n",np.max(np.sum((np.abs(q)-np.abs(V1))**2, axis=0)))
+print("\n EigenGame : Squared error in estimation of eigenvectors as compared to numpy :\n",(np.sum((np.abs(q)-np.abs(EigenGame))**2, axis=0)))
+print("\n EigenGame : Biggest squared error in estimation of eigenvectors as compared to numpy :\n",np.max(np.sum((np.abs(q)-np.abs(EigenGame))**2, axis=0)))
+print("\n Oja's Algorithm : Squared error in estimation of eigenvectors as compared to numpy :\n",(np.sum((np.abs(q)-np.abs(Oja))**2, axis=0)))
+print("\n Oja's Algorithm : Biggest squared error in estimation of eigenvectors as compared to numpy :\n",np.max(np.sum((np.abs(q)-np.abs(Oja))**2, axis=0)))
