@@ -17,17 +17,36 @@ How does Game Theory help ? Today's algorithms that where used to solve PCA (fin
 
 For a guess $\hat{V}$ of the matrix $V$, we define $R(\hat{V}) = \hat{V}^T M \hat{V}$. Our goal is that $R(\hat{V})$ is a diagonal matrix. We want to maximize the trace of $R$ (equivalent to minimizing reconstruction error) :
 
-$$\underset{\hat{V}^T \hat{V} = I}{max} \left\{ \sum\limits_{i} R_{ii} = Tr(R) = TR\left(\hat{V}^T M \hat{V}\right) = Tr\left(\hat{V} \hat{V}^T M\right) = Tr(R) \right\}$$
+\begin{equation}
+    \underset{\hat{V}^T \hat{V} = I}{max} \left\{ \sum\limits_{i} R_{ii} = Tr(R) = TR\left(\hat{V}^T M \hat{V}\right) = Tr\left(\hat{V} \hat{V}^T M\right) = Tr(R) \right\}
+\end{equation}
+
 
 Only maximize the trace of $R$ is independent of $\hat{V}$, so this function doesn't help to recover the eigenvectors. We need to look again at the equation $V^T M V = \Lambda$ and we can see that to recover the eigenvectors of $M$, $\Lambda$ needs to be diagonal, and so does $R$. To ensure this, we need to minimize $\displaystyle \sum\limits_{i \neq j} R_{ij}^2$.
 
-We can combine these the maximizing and minimizing utility function to create the utility function that we will use :
+We can combine these maximizing and minimizing parts of $R$ to create the utility function that we will use :
 
-$$\underset{\hat{V}^T \hat{V} = I} \sum\limits_i R_{ii} - \sum\limits_{i \neq j} R_{ij}^2$$
-
+\begin{equation}
+  u_i(\hat{v_i} \, | \, \hat{v_{j < i}}) = \sum\limits_i R_{ii} - \sum\limits_{i \neq j} R_{ij}^2
+\end{equation}
 Here is where the Game Implementation comes into place : players are playing one be one. So the first player finds the eigenvector with the biggest eigenvalue, so the biggest Principal Component. After this, the second player will find the second biggest eigenvector knowing the first one. So it has to be orthogonal to the first one, it is the second biggest Principal Component. The second eigenvector knows that it has be orthogonal to the first two and it gives us the third biggest principal component, etc.
 
-So each player will have a different utility function because they will different amount of information to take into account. The utility function of the first player is : $\underset{\hat{v_1}^T \hat{v_1} = 1}{max} \langle \hat{v_1}, M \hat{v_1} \rangle$. 
+So each player will have a different utility function because they will different amount of information to take into account. The utility function of the first player is : $\underset{\hat{v_1}^T \hat{v_1} = 1}{max} \langle \hat{v_1}, M \hat{v_1} \rangle$. But for the second player, it's utility function will be $\underset{\hat{v_2}^T \hat{v_2} = 1, \hat{v_2}^T \hat{v_1} = 0}{max} \langle \hat{v_2}, M \hat{v_2}\rangle - \fdfrac{\langle \hat{v_2}, M \hat{v_1}\rangle^2}{\langle \hat{v_1}, M \hat{v_1}\rangle}$ and in general, the utility function of the player $i$ is :
+
+\begin{equation}
+  \underset{\hat{v_i}^T \hat{v_i} = 1}{max} \left\{ \langle \hat{v_i}, M \hat{v_i}\rangle - \sum\limits_{j < i} \fdfrac{\langle \hat{v_i}, M \hat{v_j}\rangle^2}{\langle \hat{v_j}, M \hat{v_j}\rangle} \right\}
+\end{equation}
+
+We can see that we divide $\langle \hat{v_i}, M \hat{v_j}\rangle$ by $\langle \hat{v_j}, M \hat{v_j}\rangle$. It puts the positive term and the negative term on the same scale.
+
+The first algorithm is a sequential algorithm that computes the eigenvectors $v_i$ in order. It uses the gradient of the utility function to find the direction that maximizes the utility function :
+
+
+\begin{equation}
+  \nabla_{\hat{v_i}} (\hat{v_i} \, | \, \hat{v_{j < i}}) = 2M \underbrace{\left[ \hat{v_i} - \sum\limits_{j < i} \fdfrac{\hat{v_i}^T M \hat{v_j}}{\hat{v_j}^T M \hat{v_j}} \hat{v_j} }_{\text{Generalized Gram-Schmidt product} \right]}  = 2X^T \left[ X \hat{v_i} - \sum\limits_{j < i} \fdfrac{\langle X \hat{v_i}, X \hat{v_j} \rangle}{\langle X \hat{v_j}, X \hat{v_j}} X \hat{v_j} \right]
+\end{equation}
+
+The scaling that we introduced in equation $(3)$ also helps to understand this gradient. One step of the gradient is just one Generalized Gram-Schmidt step followed by a matrix product. So the algorithm orthogonalizes the vectors once and "fits" them again to the data. This back and forth method can explain intuitively why we find the Principal Components of $X$. 
 
 \section{Implementation}
 

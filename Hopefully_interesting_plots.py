@@ -219,7 +219,7 @@ def plot_all(n,d,lr,iterations,threshold) :
     return V_Oja, V_EigenGame
 n = 100
 d = 50
-iterations = 10
+iterations = 300
 
 
 # Oja = Oja_algo(X, iterations, create_matrix(d,d), 0.1)
@@ -243,7 +243,7 @@ for name in ["Oja.csv", "EigenGame.csv"] :
     df = pd.DataFrame(df)
     df.to_csv(name, index = False)
 
-for i in range(4) :
+for i in range(10) :
     X = create_matrix(n,d)
     a,b = plot_all(n,d,0.1,iterations,math.pi / 32)
 
