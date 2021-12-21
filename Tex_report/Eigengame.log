@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.2) (preloaded format=pdflatex 2021.4.20)  20 DEC 2021 01:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.2) (preloaded format=pdflatex 2021.4.20)  20 DEC 2021 23:58
 entering extended mode
 **./Eigengame.tex
 (Eigengame.tex
@@ -1071,25 +1071,56 @@ Configuring pdfsync
 {C:/Users/juraj/AppData/Local/MiKTeX/pdftex/config/pdftex.map}]
 \openout2 = `liste/1.aux'.
 
- (liste/1.tex) (Eigengame.aux
-(liste/1.aux))
+ (liste/1.tex
+LaTeX Font Info:    Trying to load font information for U+msa on input line 8.
+
+(C:\Program Files\MiKTeX\tex/latex/amsfonts\umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 8.
+
+(C:\Program Files\MiKTeX\tex/latex/amsfonts\umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+LaTeX Font Info:    Trying to load font information for U+stmry on input line 8
+.
+
+(C:\Users\juraj\AppData\Roaming\MiKTeX\tex/latex/stmaryrd\ustmry.fd)
+liste/1.tex:26: Limit controls must follow a math operator.
+l.26 ...nderset{\hat{V}^T \hat{V} = I} \sum\limits
+                                                  _i R_{ii} - \sum\limits_{i...
+I'm ignoring this misplaced \limits or \nolimits command.
+
+[2.2
+
+]) [3.3] (Eigengame.aux (liste/1.aux))
 Package rerunfilecheck Info: File `Eigengame.out' has not changed.
-(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
+(rerunfilecheck)             Checksum: 477BE98C3D4B2A8DFFD23049DF771785;577.
  ) 
 Here is how much of TeX's memory you used:
- 26374 strings out of 479334
- 468522 string characters out of 2866960
- 894093 words of memory out of 3000000
- 43328 multiletter control sequences out of 15000+200000
- 406038 words of font info for 31 fonts, out of 3000000 for 9000
+ 26457 strings out of 479334
+ 469713 string characters out of 2866960
+ 903109 words of memory out of 3000000
+ 43376 multiletter control sequences out of 15000+200000
+ 413363 words of font info for 54 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 92i,31n,92p,549b,575s stack positions out of 5000i,500n,10000p,200000b,50000s
- <C:\Users\juraj\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm
+ 92i,32n,92p,682b,672s stack positions out of 5000i,500n,10000p,200000b,50000s
+ <C:\Users\juraj\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecsl
 1200.pk> <C:\Users\juraj\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi60
-0\ecbx2488.pk>
-Output written on Eigengame.pdf (1 page, 20592 bytes).
+0\ecbx1728.pk> <C:\Users\juraj\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec
+/dpi600\ecrm1200.pk> <C:\Users\juraj\AppData\Local\MiKTeX\fonts/pk/ljfour/jknap
+pen/ec/dpi600\ecbx2488.pk><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/
+cm/cmex10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pf
+b><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Program
+ Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Program Files/MiKTeX
+/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files/MiKTeX/fonts/type1/
+public/amsfonts/cm/cmr6.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfont
+s/cm/cmr8.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pf
+b><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Program
+ Files/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on Eigengame.pdf (3 pages, 142059 bytes).
 PDF statistics:
- 65 PDF objects out of 1000 (max. 8388607)
- 2 named destinations out of 1000 (max. 500000)
- 13 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 232 PDF objects out of 1000 (max. 8388607)
+ 9 named destinations out of 1000 (max. 500000)
+ 53 words of extra memory for PDF output out of 10000 (max. 10000000)
 

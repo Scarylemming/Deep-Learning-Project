@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 import math
+import pandas as pd
 
 # Calculate the eigenvalues of covariance matrix of X using Numpy for comparison
 def calc_numpy_eig(X):
@@ -172,7 +173,7 @@ def EigenGame_plot(X,d,iterations=100, lr = 0.1, threshold = math.pi / 8):
     V1[:,0] = v
 
     for k in range(d):
-        print ("Finding the eigenvector ",k)
+        #print ("Finding the eigenvector ",k)
         for i in range(iterations):
             if k==0:
                 v = update(k,X,V1,lr)
@@ -186,21 +187,40 @@ def EigenGame_plot(X,d,iterations=100, lr = 0.1, threshold = math.pi / 8):
             #print("q", q.shape,"V", V1.shape)
         streaks.append(np.max(np.sum((np.abs(q)-np.abs(V1))**2, axis=0)))
     return V1, streaks
-
+def EigenGame_plot_all(X,d,iterations = 100, lr = 0.1, threshold = math.pi / 8) : 
+    res = []
+    for i in range(iterations) : 
+        print(i)
+        V, streaks = EigenGame_plot(X,d,i,lr, threshold)
+        res.append(streaks[-1])
+    
+    
+    return V, res
 def plot_all(n,d,lr,iterations,threshold) : 
     V = np.ones([d,d])
     V_Oja, streaks_Oja = Oja_plot(X,iterations,V,lr,threshold)
     print("End Oja's algorithm")
-    V_EigenGame, streaks_EigenGame = EigenGame_plot(X,d,iterations,lr,threshold)
-    plt.plot(list(range(len(streaks_Oja)-1)),streaks_Oja[1:],label = "Oja")
-    plt.plot(list(range(len(streaks_EigenGame)-1)),streaks_EigenGame[1:], label = "EigenGame")
-    plt.legend(loc='lower right')
-    plt.yscale("log")
-    plt.show()
+    V_EigenGame, streaks_EigenGame = EigenGame_plot_all(X,d,iterations,lr,threshold)
+    # plt.plot(list(range(len(streaks_Oja)-1)),streaks_Oja[1:],label = "Oja")
+    # plt.plot(list(range(len(streaks_EigenGame)-1)),streaks_EigenGame[1:], label = "EigenGame")
+    # plt.title("Biggest eigenvector error based on number of iterations performed")
+    # plt.xlabel("Number of iterations")
+    # plt.ylabel("Biggest eigenvector error")
+    # plt.legend(loc='upper right')
+    # plt.yscale("log")
+    # plt.show()
+    df = pd.read_csv("Oja.csv")
+    df[len(df.columns) + 1] = streaks_Oja
+    df.to_csv("Oja.csv", index = False)
+    df = pd.read_csv("EigenGame.csv")
+    df[len(df.columns) + 1]= streaks_EigenGame
+    df.to_csv("EigenGame.csv", index = False)
+    
+    return V_Oja, V_EigenGame
 n = 100
-d =50
-iterations = 1000
-X = create_matrix(n,d)
+d = 50
+iterations = 10
+
 
 # Oja = Oja_algo(X, iterations, create_matrix(d,d), 0.1)
 # p,q = calc_numpy_eig(X)
@@ -214,9 +234,35 @@ X = create_matrix(n,d)
 # print("\n Oja's Algorithm : Squared error in estimation of eigenvectors as compared to numpy :\n",(np.sum((np.abs(q)-np.abs(Oja))**2, axis=0)))
 # print("\n Oja's Algorithm : Biggest squared error in estimation of eigenvectors as compared to numpy :\n",np.max(np.sum((np.abs(q)-np.abs(Oja))**2, axis=0)))
 
-numbers = 2**np.linspace(0,10)
+# numbers = 2**np.linspace(0,10)
 #create_plots(n,d,iterations, 0.1, numbers)
 
 #print(angle_threshold(Oja[:,0], Oja[:,1], math.pi / 8))
+for name in ["Oja.csv", "EigenGame.csv"] : 
+    df = {1 : [0 for i in range(iterations)]}
+    df = pd.DataFrame(df)
+    df.to_csv(name, index = False)
 
-plot_all(n,d,0.1,1000,math.pi / 32)
+for i in range(4) :
+    X = create_matrix(n,d)
+    a,b = plot_all(n,d,0.1,iterations,math.pi / 32)
+
+for name in ["Oja.csv", "EigenGame.csv"] : 
+    df = pd.read_csv(name)
+    df = df.drop(["1"], axis = 1)
+    print(df)
+    df.to_csv(name, index = False)
+
+Oja_df = pd.read_csv("Oja.csv")
+streaks_Oja = Oja_df.mean(axis = 1)
+EigenGame_df = pd.read_csv("EigenGame.csv")
+streaks_EigenGame = EigenGame_df.mean(axis = 1)
+
+plt.plot(list(range(len(streaks_Oja)-1)),streaks_Oja[1:],label = "Oja")
+plt.plot(list(range(len(streaks_EigenGame)-1)),streaks_EigenGame[1:], label = "EigenGame")
+plt.title("Biggest eigenvector error based on number of iterations performed")
+plt.xlabel("Number of iterations")
+plt.ylabel("Biggest eigenvector error")
+plt.legend(loc='upper right')
+plt.yscale("log")
+plt.show()
